@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    environment {
+        NODE_VERSION = '18.x'
+        GITHUB_CREDENTIALS = credentials('github-credentials')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git credentialsId: 'github-credentials',
+                    url: 'https://github.com/votre-username/votre-repo.git',
+                    branch: 'main'
+            }
+        }
+
+        stage('Setup Node.js') {
+            steps {
+                sh '''
+                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+                    export NVM_DIR="$HOME/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+                    nvm install ${NODE_VERSION}
+                    nvm use ${NODE_VERSION}
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('projet_exam') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                dir('projet_exam') {
+                    sh 'npm run lint'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('projet_exam') {
+                    sh 'npm test -- --coverage'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('projet_exam') {
+                    sh 'npm run build'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline frontend completed successfully!'
+        }
+        failure {
+            echo 'Pipeline frontend failed!'
+        }
+    }
+} 

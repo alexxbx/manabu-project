@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+
+    environment {
+        COMPOSER_ALLOW_SUPERUSER = 1
+        GITHUB_CREDENTIALS = credentials('github-credentials')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git credentialsId: 'github-credentials',
+                    url: 'https://github.com/votre-username/votre-repo.git',
+                    branch: 'main'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    apt-get update && apt-get install -y \
+                        php8.2 \
+                        php8.2-cli \
+                        php8.2-common \
+                        php8.2-curl \
+                        php8.2-mbstring \
+                        php8.2-mysql \
+                        php8.2-xml \
+                        php8.2-zip \
+                        git \
+                        unzip
+                    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+                    composer install --no-interaction --no-progress --prefer-dist
+                '''
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                sh 'composer run-script lint'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'composer run-script test'
+            }
+        }
+
+        stage('Security Check') {
+            steps {
+                sh 'composer audit'
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo 'Pipeline backend completed successfully!'
+        }
+        failure {
+            echo 'Pipeline backend failed!'
+        }
+    }
+} 
