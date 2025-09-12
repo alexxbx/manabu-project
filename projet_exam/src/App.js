@@ -16,6 +16,8 @@ import LessonQuiz from './Pages/LessonQuiz';
 import Terms from './Pages/Terms';
 import ComingSoon from './Pages/ComingSoon';
 import AboutUs from './Pages/AboutUs';
+import CommunityRules from './Pages/CommunityRules';
+import PrivacyPolicy from './Pages/PrivacyPolicy';
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/coming-soon" element={<ComingSoon />} />
         <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/community-guidelines" element={<CommunityRules />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
       </Routes>
     </Router>
   );

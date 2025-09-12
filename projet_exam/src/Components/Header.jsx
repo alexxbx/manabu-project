@@ -35,7 +35,7 @@ const Header = () => {
                                     <span className="text-lg">カ</span>
                                 </div>
                             }
-                            to="/review"
+                            to="/flashcards"
                         />
 
                         <NavItem icon={
@@ -94,6 +94,7 @@ const Header = () => {
                     <MobileNavItem icon="🏆" text="Classement" to="/leaderboard" />
                     <MobileNavItem icon="💬" text="Chat" to="/chat" />
                     <MobileNavItem icon="👥" text="Multijoueur" to="/multiplayer" />
+		    <MobileNavItem icon="🃏" text="FlashCards" to="/flashcards"/>
                 </div>
             </div>
         </header>
