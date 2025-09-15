@@ -18,9 +18,9 @@ class AuthControllerTest extends WebTestCase
 
         $user = new User();
         $user->setEmail('test@example.com');
-        $user->setUsername('testuser'); 
+        $user->setUsername('testuser');
         $user->setPassword($this->passwordHasher->hashPassword($user, 'password123'));
-        $user->setCreatedAt(new \DateTimeImmutable()); 
+        $user->setCreatedAt(new \DateTimeImmutable());
         $this->em->persist($user);
         $this->em->flush();
 
@@ -32,8 +32,7 @@ class AuthControllerTest extends WebTestCase
             'username' => 'testuser',
             'password' => 'password123',
         ]);
-
-        $this->assertResponseIsSuccessful(); 
+        $this->assertResponseIsSuccessful();
     }
 
     public function testLoginWithInvalidCredentials()

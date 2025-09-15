@@ -19,7 +19,7 @@ class GameSession
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['game:read'])]
+    #[Groups([self::GAME_READ_GROUP])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'hostedGames')]
@@ -184,4 +184,4 @@ class GameSession
         $this->gameData = $gameData;
         return $this;
     }
-} 
+}
