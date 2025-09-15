@@ -16,12 +16,11 @@ class AuthControllerTest extends WebTestCase
         $this->em = $this->client->getContainer()->get(EntityManagerInterface::class);
         $this->passwordHasher = $this->client->getContainer()->get(UserPasswordHasherInterface::class);
 
-        // Créer un utilisateur de test
         $user = new User();
         $user->setEmail('test@example.com');
-        $user->setUsername('testuser'); // <-- ajouté
+        $user->setUsername('testuser'); 
         $user->setPassword($this->passwordHasher->hashPassword($user, 'password123'));
-        $user->setCreatedAt(new \DateTimeImmutable()); // obligatoire
+        $user->setCreatedAt(new \DateTimeImmutable()); 
         $this->em->persist($user);
         $this->em->flush();
 
@@ -34,7 +33,7 @@ class AuthControllerTest extends WebTestCase
             'password' => 'password123',
         ]);
 
-        $this->assertResponseIsSuccessful(); // 200 OK
+        $this->assertResponseIsSuccessful(); 
     }
 
     public function testLoginWithInvalidCredentials()
