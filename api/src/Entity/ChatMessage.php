@@ -14,27 +14,29 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ChatMessageRepository::class)]
 class ChatMessage
 {
+    public const CHAT_READ_GROUP = 'chat:read';
+    public const CHAT_WRITE_GROUP = 'chat:write';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['chat:read'])]
+    #[Groups([self::CHAT_READ_GROUP])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'chatMessages')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[Groups(['chat:read', 'chat:write'])]
+    #[Groups([self::CHAT_READ_GROUP, self::CHAT_WRITE_GROUP])]
     private ?User $user = null;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['chat:read', 'chat:write'])]
+    #[Groups([self::CHAT_READ_GROUP, self::CHAT_WRITE_GROUP])]
     private ?string $message = null;
 
     #[ORM\Column]
-    #[Groups(['chat:read'])]
+    #[Groups([self::CHAT_READ_GROUP])]
     private ?bool $isFromUser = null;
 
     #[ORM\Column]
-    #[Groups(['chat:read'])]
+    #[Groups([self::CHAT_READ_GROUP])]
     private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()

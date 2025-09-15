@@ -20,24 +20,28 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const USER_READ_GROUP = 'user:read';
+    public const USER_WRITE_GROUP = 'user:write';
+    public const PROGRESSION_READ_GROUP = 'progression:read';
+    public const PROGRESSION_WRITE_GROUP = 'progression:write';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 20)]
-    #[Groups(['user:read', 'user:write', 'progression:read', 'progression:write'])]
+    #[Groups([self::USER_READ_GROUP, self::USER_WRITE_GROUP, self::PROGRESSION_READ_GROUP, self::PROGRESSION_WRITE_GROUP])]
     private ?string $username = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:read', 'user:write', 'progression:read', 'progression:write'])]
+    #[Groups([self::USER_READ_GROUP, self::USER_WRITE_GROUP, self::PROGRESSION_READ_GROUP, self::PROGRESSION_WRITE_GROUP])]
     private ?string $email = null;
 
-    #[Groups(['user:write'])]
+    #[Groups([self::USER_WRITE_GROUP])]
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[Groups(['user:read', 'user:write'])]
+    #[Groups([self::USER_READ_GROUP, self::USER_WRITE_GROUP])]
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -46,25 +50,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     // ✅ Messages supprimés avec l'utilisateur
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ChatMessage::class, cascade: ['remove'], orphanRemoval: true)]
-    #[Groups(['user:read'])]
+    #[Groups([self::USER_READ_GROUP])]
     private Collection $chatMessages;
 
     // ✅ Parties où il est hôte
     #[ORM\OneToMany(mappedBy: 'host', targetEntity: GameSession::class, cascade: ['remove'], orphanRemoval: true)]
-    #[Groups(['user:read'])]
+    #[Groups([self::USER_READ_GROUP])]
     private Collection $hostedGames;
 
     // ✅ Parties où il est invité
     #[ORM\OneToMany(mappedBy: 'guest', targetEntity: GameSession::class, cascade: ['remove'], orphanRemoval: true)]
-    #[Groups(['user:read'])]
+    #[Groups([self::USER_READ_GROUP])]
     private Collection $joinedGames;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Progression::class, cascade: ['remove'], orphanRemoval: true)]
-    #[Groups(['user:read'])]
+    #[Groups([self::USER_READ_GROUP])]
     private Collection $progressions;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Leaderboard::class, cascade: ['remove'], orphanRemoval: true)]
-    #[Groups(['user:read'])]
+    #[Groups([self::USER_READ_GROUP])]
     private Collection $leaderboardEntries;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserAchievement::class, cascade: ['remove'], orphanRemoval: true)]

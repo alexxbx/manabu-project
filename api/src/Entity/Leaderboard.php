@@ -14,39 +14,41 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: LeaderboardRepository::class)]
 class Leaderboard
 {
+    public const LEADERBOARD_READ_GROUP = 'leaderboard:read';
+    public const LEADERBOARD_WRITE_GROUP = 'leaderboard:write';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['leaderboard:read'])]
+    #[Groups([self::LEADERBOARD_READ_GROUP])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'leaderboardEntries')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[Groups(['leaderboard:read', 'leaderboard:write'])]
+    #[Groups([self::LEADERBOARD_READ_GROUP, self::LEADERBOARD_WRITE_GROUP])]
     private ?User $user = null;
 
     #[ORM\Column]
-    #[Groups(['leaderboard:read', 'leaderboard:write'])]
+    #[Groups([self::LEADERBOARD_READ_GROUP, self::LEADERBOARD_WRITE_GROUP])]
     private ?int $totalGames = 0;
 
     #[ORM\Column]
-    #[Groups(['leaderboard:read', 'leaderboard:write'])]
+    #[Groups([self::LEADERBOARD_READ_GROUP, self::LEADERBOARD_WRITE_GROUP])]
     private ?int $wins = 0;
 
     #[ORM\Column]
-    #[Groups(['leaderboard:read', 'leaderboard:write'])]
+    #[Groups([self::LEADERBOARD_READ_GROUP, self::LEADERBOARD_WRITE_GROUP])]
     private ?int $losses = 0;
 
     #[ORM\Column]
-    #[Groups(['leaderboard:read', 'leaderboard:write'])]
+    #[Groups([self::LEADERBOARD_READ_GROUP, self::LEADERBOARD_WRITE_GROUP])]
     private ?int $draws = 0;
 
     #[ORM\Column]
-    #[Groups(['leaderboard:read', 'leaderboard:write'])]
+    #[Groups([self::LEADERBOARD_READ_GROUP, self::LEADERBOARD_WRITE_GROUP])]
     private ?int $totalPoints = 0;
 
     #[ORM\Column]
-    #[Groups(['leaderboard:read'])]
+    #[Groups([self::LEADERBOARD_READ_GROUP])]
     private ?\DateTimeImmutable $lastUpdated = null;
 
     public function __construct()
@@ -153,6 +155,8 @@ class Leaderboard
                 $this->draws++;
                 $this->totalPoints += 1;
                 break;
+            default:
+                throw new \InvalidArgumentException("Résultat invalide : $result");
         }
     }
 } 

@@ -15,34 +15,36 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: ExerciseRepository::class)]
 class Exercise
 {
+    public const EXERCISE_READ_GROUP = 'exercise:read';
+    public const EXERCISE_WRITE_GROUP = 'exercise:write';
     
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Groups(['exercise:read', 'exercise:write'])]
+    #[Groups([Exercise::EXERCISE_READ_GROUP, Exercise::EXERCISE_WRITE_GROUP])]
     #[ORM\Column(length: 255)]
     private ?string $question = null;
 
-    #[Groups(['exercise:read', 'exercise:write'])]
+    #[Groups([Exercise::EXERCISE_READ_GROUP, Exercise::EXERCISE_WRITE_GROUP])]
     #[ORM\Column]
     private array $options = [];
 
-    #[Groups(['exercise:read', 'exercise:write'])]
+    #[Groups([Exercise::EXERCISE_READ_GROUP, Exercise::EXERCISE_WRITE_GROUP])]
     #[ORM\Column(length: 255)]
     private ?string $answer = null;
 
-    #[Groups(['exercise:read', 'exercise:write'])]
+    #[Groups([Exercise::EXERCISE_READ_GROUP, Exercise::EXERCISE_WRITE_GROUP])]
     #[ORM\Column(length: 255)]
     private ?string $type = null;
 
-    #[Groups(['exercise:read', 'exercise:write'])]
+    #[Groups([Exercise::EXERCISE_READ_GROUP, Exercise::EXERCISE_WRITE_GROUP])]
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $cours = null;
 
 // ✅ Sérialise la relation vers Lesson (sans créer de boucle)
-#[Groups(['exercise:read', 'exercise:write'])]
+#[Groups([Exercise::EXERCISE_READ_GROUP, Exercise::EXERCISE_WRITE_GROUP])]
 #[ORM\ManyToOne(targetEntity: Lesson::class, inversedBy: 'exercises')]
 #[ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
 private ?Lesson $lesson = null;

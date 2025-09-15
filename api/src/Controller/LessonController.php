@@ -22,13 +22,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class LessonController extends AbstractController
 {
     public function __construct(private ValidatorInterface $validator) {}
+    private const LESSON_READ_GROUP = 'lesson:read';
+    private const LESSON_NOT_FOUND = 'Leçon introuvable';
 
     #[Route('', name: 'lesson_list', methods: ['GET'])]
     public function list(EntityManagerInterface $em): JsonResponse
     {
         // ✅ CORRECTION : 'position' au lieu de 'order'
         $lessons = $em->getRepository(Lesson::class)->findBy([], ['position' => 'ASC']);
-        return $this->json($lessons, Response::HTTP_OK, [], ['groups' => 'lesson:read']);
+        return $this->json($lessons, Response::HTTP_OK, [], ['groups' => self::LESSON_READ_GROUP]);
     }
 
     #[Route('/{id}', name: 'lesson_show', methods: ['GET'])]
@@ -36,9 +38,9 @@ class LessonController extends AbstractController
     {
         $lesson = $em->getRepository(Lesson::class)->find($id);
         if (!$lesson) {
-            return $this->json(['error' => 'Leçon introuvable'], Response::HTTP_NOT_FOUND);
+            return $this->json(['error' => self::LESSON_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
-        return $this->json($lesson, Response::HTTP_OK, [], ['groups' => 'lesson:read']);
+        return $this->json($lesson, Response::HTTP_OK, [], ['groups' => self::LESSON_READ_GROUP]);
     }
 
     #[Route('', name: 'lesson_create', methods: ['POST'])]
@@ -63,7 +65,7 @@ class LessonController extends AbstractController
         $em->persist($lesson);
         $em->flush();
 
-        return $this->json($lesson, Response::HTTP_CREATED, [], ['groups' => 'lesson:read']);
+        return $this->json($lesson, Response::HTTP_CREATED, [], ['groups' => self::LESSON_READ_GROUP]);
     }
 
 
@@ -84,7 +86,7 @@ public function completeLesson(
 
     $lesson = $lessonRepository->find($lessonId);
     if (!$lesson) {
-        return $this->json(['error' => 'Leçon introuvable'], Response::HTTP_NOT_FOUND);
+        return $this->json(['error' => self::LESSON_NOT_FOUND], Response::HTTP_NOT_FOUND);
     }
 
     $progression = $progressionRepository->findOneBy(['user' => $user, 'lesson' => $lesson]);
@@ -169,7 +171,7 @@ public function completeLesson(
     ): JsonResponse {
         $lesson = $lessonRepository->find($id);
         if (!$lesson) {
-            return $this->json(['error' => 'Leçon introuvable'], Response::HTTP_NOT_FOUND);
+            return $this->json(['error' => self::LESSON_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         $data = json_decode($request->getContent(), true) ?? [];
@@ -186,6 +188,6 @@ public function completeLesson(
 
         $em->flush();
 
-        return $this->json($lesson, Response::HTTP_OK, [], ['groups' => 'lesson:read']);
+        return $this->json($lesson, Response::HTTP_OK, [], ['groups' => self::LESSON_READ_GROUP]);
     }
 }

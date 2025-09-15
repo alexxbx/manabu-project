@@ -14,26 +14,28 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Achievement
 {
+    public const ACHIEVEMENT_READ_GROUP = 'achievement:read';
+    public const ACHIEVEMENT_WRITE_GROUP = 'achievement:write';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['achievement:read'])]
+    #[Groups([Achievement::ACHIEVEMENT_READ_GROUP])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['achievement:read', 'achievement:write'])]
+    #[Groups([Achievement::ACHIEVEMENT_READ_GROUP, Achievement::ACHIEVEMENT_WRITE_GROUP])]
     private ?string $title = null;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['achievement:read', 'achievement:write'])]
+    #[Groups([Achievement::ACHIEVEMENT_READ_GROUP, Achievement::ACHIEVEMENT_WRITE_GROUP])]
     private ?string $description = null;
 
     #[ORM\Column]
-    #[Groups(['achievement:read', 'achievement:write'])]
+    #[Groups([Achievement::ACHIEVEMENT_READ_GROUP, Achievement::ACHIEVEMENT_WRITE_GROUP])]
     private ?int $requiredLessons = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['achievement:read', 'achievement:write'])]
+    #[Groups([Achievement::ACHIEVEMENT_READ_GROUP, Achievement::ACHIEVEMENT_WRITE_GROUP])]
     private ?string $icon = null;
 
     // ✅ Plus de $user ou $unlockedAt ici, ça reste GLOBAL

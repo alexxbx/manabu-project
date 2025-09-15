@@ -44,7 +44,9 @@ class AchievementController extends AbstractController
             $lockedAchievements = $this->achievementRepo->findAll();
             $locked = array_filter($lockedAchievements, function($ach) use ($unlocked) {
                 foreach ($unlocked as $u) {
-                    if ($u->getAchievement()->getId() === $ach->getId()) return false;
+                    if ($u->getAchievement()->getId() === $ach->getId()) {
+                    return false;
+                    }
                 }
                 return true;
             });

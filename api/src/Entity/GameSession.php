@@ -14,6 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: GameSessionRepository::class)]
 class GameSession
 {
+    public const GAME_READ_GROUP = 'game:read';
+    public const GAME_WRITE_GROUP = 'game:write';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -22,44 +24,44 @@ class GameSession
 
     #[ORM\ManyToOne(inversedBy: 'hostedGames')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[Groups(['game:read', 'game:write'])]
+    #[Groups([self::GAME_READ_GROUP, self::GAME_WRITE_GROUP])]
     private ?User $host = null;
 
     #[ORM\ManyToOne(inversedBy: 'joinedGames')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
-    #[Groups(['game:read', 'game:write'])]
+    #[Groups([self::GAME_READ_GROUP, self::GAME_WRITE_GROUP])]
     private ?User $guest = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(['game:read', 'game:write'])]
+    #[Groups([self::GAME_READ_GROUP, self::GAME_WRITE_GROUP])]
     private ?string $status = null; // 'WAITING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'
 
     #[ORM\Column]
-    #[Groups(['game:read'])]
+    #[Groups([self::GAME_READ_GROUP])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['game:read'])]
+    #[Groups([self::GAME_READ_GROUP])]
     private ?\DateTimeImmutable $startedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['game:read'])]
+    #[Groups([self::GAME_READ_GROUP])]
     private ?\DateTimeImmutable $endedAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['game:read', 'game:write'])]
+    #[Groups([self::GAME_READ_GROUP, self::GAME_WRITE_GROUP])]
     private ?int $hostScore = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['game:read', 'game:write'])]
+    #[Groups([self::GAME_READ_GROUP, self::GAME_WRITE_GROUP])]
     private ?int $guestScore = null;
 
     #[ORM\ManyToOne]
-    #[Groups(['game:read', 'game:write'])]
+    #[Groups([self::GAME_READ_GROUP, self::GAME_WRITE_GROUP])]
     private ?User $winner = null;
 
     #[ORM\Column(type: 'json', nullable: true)]
-    #[Groups(['game:read', 'game:write'])]
+    #[Groups([self::GAME_READ_GROUP, self::GAME_WRITE_GROUP])]
     private ?array $gameData = null; // Pour stocker les données spécifiques au jeu
 
     public function __construct()

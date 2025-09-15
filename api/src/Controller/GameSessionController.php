@@ -16,7 +16,11 @@ use Symfony\Bundle\SecurityBundle\Security;
 #[Route('/api/game-sessions')]
 class GameSessionController extends AbstractController
 {
+    private const DATE_FORMAT = 'Y-m-d H:i:s';
+    private const UNAUTHORIZED_MESSAGE = 'Non autorisé';
+    private const GAME_SESSION_NOT_FOUND = 'Session de jeu non trouvée';
     public function __construct(
+        
         private EntityManagerInterface $entityManager,
         private GameSessionRepository $gameSessionRepository,
         private UserRepository $userRepository,
@@ -28,7 +32,7 @@ class GameSessionController extends AbstractController
     {
         $user = $this->security->getUser();
         if (!$user) {
-            return new JsonResponse(['message' => 'Non autorisé'], Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['message' => self::UNAUTHORIZED_MESSAGE], Response::HTTP_UNAUTHORIZED);
         }
 
         $gameSession = new GameSession();
@@ -52,12 +56,12 @@ class GameSessionController extends AbstractController
     {
         $user = $this->security->getUser();
         if (!$user) {
-            return new JsonResponse(['message' => 'Non autorisé'], Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['message' => self::UNAUTHORIZED_MESSAGE], Response::HTTP_UNAUTHORIZED);
         }
 
         $gameSession = $this->gameSessionRepository->find($id);
         if (!$gameSession) {
-            return new JsonResponse(['message' => 'Session de jeu non trouvée'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => self::GAME_SESSION_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         if ($gameSession->getStatus() !== 'WAITING') {
@@ -90,12 +94,12 @@ class GameSessionController extends AbstractController
     {
         $user = $this->security->getUser();
         if (!$user) {
-            return new JsonResponse(['message' => 'Non autorisé'], Response::HTTP_UNAUTHORIZED);
+            return new JsonResponse(['message' => self::UNAUTHORIZED_MESSAGE], Response::HTTP_UNAUTHORIZED);
         }
 
         $gameSession = $this->gameSessionRepository->find($id);
         if (!$gameSession) {
-            return new JsonResponse(['message' => 'Session de jeu non trouvée'], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['message' => self::GAME_SESSION_NOT_FOUND], Response::HTTP_NOT_FOUND);
         }
 
         if ($gameSession->getStatus() !== 'IN_PROGRESS') {
@@ -146,7 +150,7 @@ class GameSessionController extends AbstractController
                     'id' => $game->getHost()->getId(),
                     'username' => $game->getHost()->getUsername()
                 ],
-                'createdAt' => $game->getCreatedAt()->format('Y-m-d H:i:s')
+                'createdAt' => $game->getCreatedAt()->format(self::DATE_FORMAT)
             ];
         }, $waitingGames);
 
@@ -176,9 +180,9 @@ class GameSessionController extends AbstractController
                     'id' => $game->getWinner()->getId(),
                     'username' => $game->getWinner()->getUsername()
                 ] : null,
-                'createdAt' => $game->getCreatedAt()->format('Y-m-d H:i:s'),
-                'startedAt' => $game->getStartedAt() ? $game->getStartedAt()->format('Y-m-d H:i:s') : null,
-                'endedAt' => $game->getEndedAt() ? $game->getEndedAt()->format('Y-m-d H:i:s') : null
+                'createdAt' => $game->getCreatedAt()->format(self::DATE_FORMAT),
+                'startedAt' => $game->getStartedAt() ? $game->getStartedAt()->format(self::DATE_FORMAT) : null,
+                'endedAt' => $game->getEndedAt() ? $game->getEndedAt()->format(self::DATE_FORMAT) : null
             ];
         }, $games);
 

@@ -20,21 +20,24 @@ use App\EventListener\LessonPositionListener;
 #[ORM\HasLifecycleCallbacks]
 class Lesson
 {
+    public const LESSON_READ_GROUP = 'lesson:read';
+    public const LESSON_WRITE_GROUP = 'lesson:write';
+    public const EXERCISE_READ_GROUP = 'exercise:read';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['lesson:read'])]
+    #[Groups([self::LESSON_READ_GROUP])]
     private ?int $id = null;
 
-    #[Groups(['lesson:read', 'exercise:read', 'lesson:write'])]
+    #[Groups([self::LESSON_READ_GROUP, self::EXERCISE_READ_GROUP, self::LESSON_WRITE_GROUP])]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[Groups(['lesson:read', 'exercise:read', 'lesson:write'])]
+    #[Groups([self::LESSON_READ_GROUP, self::EXERCISE_READ_GROUP, self::LESSON_WRITE_GROUP])]
     #[ORM\Column(type: 'text')]
     private ?string $content = null;
 
-    #[Groups(['lesson:read', 'exercise:read', 'lesson:write'])]
+    #[Groups([self::LESSON_READ_GROUP, self::EXERCISE_READ_GROUP, self::LESSON_WRITE_GROUP])]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $level = null;
 

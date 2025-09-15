@@ -9,24 +9,27 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Entity(repositoryClass: UserAchievementRepository::class)]
 class UserAchievement
 {
+    public const USER_ACHIEVEMENT_READ_GROUP = 'userAchievement:read';
+    public const USER_ACHIEVEMENT_WRITE_GROUP = 'userAchievement:write';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['userAchievement:read'])]
+    #[Groups([self::USER_ACHIEVEMENT_READ_GROUP])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['userAchievement:read'])]
+    #[Groups([self::USER_ACHIEVEMENT_READ_GROUP])]
     private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Achievement::class)]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['userAchievement:read'])]
+    #[Groups([self::USER_ACHIEVEMENT_READ_GROUP])]
     private ?Achievement $achievement = null;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    #[Groups(['userAchievement:read'])]
+    #[Groups([self::USER_ACHIEVEMENT_READ_GROUP])]
     private ?\DateTimeInterface $unlockedAt = null;
 
     public function getId(): ?int

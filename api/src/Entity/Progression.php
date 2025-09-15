@@ -14,14 +14,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Progression
 {
+    public const PROGRESSION_READ_GROUP = 'progression:read';
+    public const PROGRESSION_WRITE_GROUP = 'progression:write';
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['progression:read'])]
+    #[Groups([self::PROGRESSION_READ_GROUP])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ["persist"], inversedBy: 'progressions')] 
-    #[Groups(['progression:read', 'progression:write'])]
+    #[Groups([self::PROGRESSION_READ_GROUP, self::PROGRESSION_WRITE_GROUP])]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
@@ -31,11 +33,11 @@ class Progression
     
 
     #[ORM\Column(type: 'boolean')]
-    #[Groups(['progression:read', 'progression:write'])]
+    #[Groups([self::PROGRESSION_READ_GROUP, self::PROGRESSION_WRITE_GROUP])]
     private bool $completed = false;
 
     #[ORM\Column(type: 'datetime')]
-    #[Groups(['progression:read'])]
+    #[Groups([self::PROGRESSION_READ_GROUP])]
     private \DateTimeInterface $updatedAt;
 
         

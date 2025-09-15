@@ -2,6 +2,7 @@
 // src/Controller/ExerciseController.php
 namespace App\Controller;
 
+
 use App\Entity\Lesson;
 use App\Entity\Exercise;
 use App\Service\ErrorNormalizer;
@@ -17,6 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/api/exercises')]
 class ExerciseController extends AbstractApiController
 {
+    private const ROUTE_ID = '/{id}';
     private ExerciseService $exerciseService;
     private ValidatorInterface $validator;
     
@@ -37,8 +39,8 @@ class ExerciseController extends AbstractApiController
         $exercises = $this->exerciseService->getAllExercises();
         return $this->json($exercises);
     }
-    
-    #[Route('/{id}', name: 'exercise_show', methods: ['GET'])]
+
+    #[Route(self::ROUTE_ID, name: 'exercise_show', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function show(int $id): JsonResponse
     {
@@ -72,8 +74,8 @@ class ExerciseController extends AbstractApiController
             return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
-    
-    #[Route('/{id}', name: 'exercise_update', methods: ['PUT'])]
+
+    #[Route(self::ROUTE_ID, name: 'exercise_update', methods: ['PUT'])]
     #[IsGranted('ROLE_ADMIN')]
     public function update(int $id, Request $request): JsonResponse
     {
@@ -98,8 +100,8 @@ class ExerciseController extends AbstractApiController
             return $this->json(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
         }
     }
-    
-    #[Route('/{id}', name: 'exercise_delete', methods: ['DELETE'])]
+
+    #[Route(self::ROUTE_ID, name: 'exercise_delete', methods: ['DELETE'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(int $id): JsonResponse
     {
